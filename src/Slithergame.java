@@ -163,7 +163,7 @@ public class Slithergame extends JFrame implements KeyListener {
 				} else {
 					try {
 						switchIcon(-4);
-					} catch (ArrayIndexOutOfBoundsException i) {
+					} catch (IndexOutOfBoundsException i) {
 						error(1);
 					}
 				}
@@ -178,7 +178,7 @@ public class Slithergame extends JFrame implements KeyListener {
 					if (empty != 4 && empty != 8 && empty != 12) {
 						try {
 							switchIcon(-1);
-						} catch (ArrayIndexOutOfBoundsException i) {
+						} catch (IndexOutOfBoundsException i) {
 							error(1);
 						}
 
