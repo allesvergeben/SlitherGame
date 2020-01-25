@@ -1,34 +1,23 @@
-import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.GridLayout;
-import java.awt.Image;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
-import java.util.Arrays; // für Arrays.toSting ausgaben
 import java.util.List;
-
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 public class Slithergame extends JFrame implements KeyListener {
 
-	private static final long serialVersionUID = 1L; // keine Ahnung was das
-														// macht musste
-														// autogeneriert werden
+	private static final long serialVersionUID = 1L;
 	public static int picrandom[] = new int[16]; // array für JLabel txt und
-													// JLabel Icon
+	// JLabel Icon
 	private static List<JLabel> labels = new ArrayList<>(); // hier sind alle
-															// JLabels
-															// gespeichert
+	// JLabels
+	// gespeichert
 	private JPanel contentPane; // GUI
 
 	public static boolean stopcheating = false;
+
 	// Methodenanfang
 	public static void error(int i) {
 		if (i == 0) {
@@ -39,31 +28,15 @@ public class Slithergame extends JFrame implements KeyListener {
 		}
 	}
 
-	public void label(JPanel contentPane) {
-
-		for (int i = 0; i < 16; i++) {
-
-			// set icon
-			Image image = new ImageIcon(getClass().getResource("L" + picrandom[i] + ".jpg")).getImage();
-			ImageIcon icon = new ImageIcon(image.getScaledInstance(labels.get(i).getWidth() - 10,
-					labels.get(i).getHeight() - 10, Image.SCALE_FAST));
-			labels.get(i).setIcon(icon);
-			// set Text
-			labels.get(i).setText("" + (picrandom[i] - 1));
-			// System.out.println("Width: "+labels.get(i).getWidth()+" Height:
-			// "+labels.get(i).getHeight());
-		}
-	}
-
-	public static int emptylabel() {
+	public static int emptyLabel() {
 		// diese methode sucht das leere Feld
 		int empty = 0;
-		int buttontxt;
+		int buttonText;
 		// while Schleife läuft so lange bis sie den leeren button gefunden hat
 		// und bricht dann ab
 		while (empty < 16) {
-			buttontxt = Integer.parseInt(labels.get(empty).getText());
-			if (buttontxt == 0) {
+			buttonText = Integer.parseInt(labels.get(empty).getText());
+			if (buttonText == 0) {
 				break;
 			} else {
 				empty++;
@@ -71,6 +44,26 @@ public class Slithergame extends JFrame implements KeyListener {
 
 		}
 		return empty;
+	}
+
+	public static void Generator() {
+
+		int generatorInt = 0;
+		// leert das array vor der neubefüllung, damit Gerneratorboolean
+		// funktioniert!
+		for (int j = 0; j < picrandom.length; j++) {
+			picrandom[j] = 0;
+		}
+		// "vermischt" die zahlen in picrandom
+		for (int i = 0; i < picrandom.length; i++) // Befüllen des Arrays
+		{
+			do {
+				generatorInt = (int) (Math.random() * 17);
+			} while (Generatorboolean(picrandom, generatorInt));
+			picrandom[i] = generatorInt;
+		}
+
+		// System.out.println(Arrays.toString(picrandom));
 	}
 
 	public static void ini() {
@@ -81,46 +74,26 @@ public class Slithergame extends JFrame implements KeyListener {
 		}
 	}
 
-	public static void Generator() {
-
-		int Generatorint = 0;
-		// leert das array vor der neubefüllung, damit Gerneratorboolean
-		// funktioniert!
-		for (int j = 0; j < picrandom.length; j++) {
-			picrandom[j] = 0;
-		}
-		// "vermischt" die zahlen in picrandom
-		for (int i = 0; i < picrandom.length; i++) // Befüllen des Arrays
-		{
-			do {
-				Generatorint = (int) (Math.random() * 17);
-			} while (Generatorboolean(picrandom, Generatorint));
-			picrandom[i] = Generatorint;
-		}
-
-		// System.out.println(Arrays.toString(picrandom));
-	}
-
-	public static boolean Generatorboolean(int[] arr, int Generatorint) {
+	public static boolean Generatorboolean(int[] arr, int generatorInt) {
 		// ist dafür da das nichts doppelt generiert wird
 		for (int w : arr) {
-			if (w == Generatorint)
+			if (w == generatorInt)
 				return true;
 		}
 		return false;
 	}
 
-	public static boolean winningcondition() {
+	public static boolean winningCondition() {
 		boolean winner = false;
-		int win[] = new int[16];
-		int buttontxt[] = new int[16];
+		int[] win = new int[16];
+		int[] buttonText = new int[16];
 		for (int i = 0; i < picrandom.length; i++) {
-			buttontxt[i] = Integer.parseInt(labels.get(i).getText()); // befüllen
-																		// von
-																		// buttontxt[]
+			buttonText[i] = Integer.parseInt(labels.get(i).getText()); // befüllen
+			// von
+			// buttonText[]
 
 			win[i] = i; // befüllen von win[]
-			if (win[i] != buttontxt[i]) { // vergleichen von win[] & button[]
+			if (win[i] != buttonText[i]) { // vergleichen von win[] & button[]
 				winner = false;
 				break;
 			} else {
@@ -128,6 +101,24 @@ public class Slithergame extends JFrame implements KeyListener {
 			}
 		}
 		return winner;
+	}
+
+	public static void switchIcon(int i) {
+		String tempUp;
+		String tempEmpty;
+		Icon tempUpIcon;
+		Icon tempEmptyIcon;
+		int empty = emptyLabel();
+
+		tempUp = labels.get(empty + i).getText();
+		tempEmpty = labels.get(empty).getText();
+		labels.get(empty + i).setText(tempEmpty);
+		labels.get(empty).setText(tempUp);
+
+		tempUpIcon = labels.get(empty + i).getIcon();
+		tempEmptyIcon = labels.get(empty).getIcon();
+		labels.get(empty + i).setIcon(tempEmptyIcon);
+		labels.get(empty).setIcon(tempUpIcon);
 	}
 
 	public static void winner() {
@@ -139,28 +130,26 @@ public class Slithergame extends JFrame implements KeyListener {
 
 	// keyevent
 
-	public static void switchIcon(int i) {
-		String tempup;
-		String tempempty;
-		Icon tempupicon;
-		Icon tempemptyicon;
-		int empty = emptylabel();
+	public void label(JPanel contentPane) {
 
-		tempup = labels.get(empty + i).getText();
-		tempempty = labels.get(empty).getText();
-		labels.get(empty + i).setText(tempempty);
-		labels.get(empty).setText(tempup);
+		for (int i = 0; i < 16; i++) {
 
-		tempupicon = labels.get(empty + i).getIcon();
-		tempemptyicon = labels.get(empty).getIcon();
-		labels.get(empty + i).setIcon(tempemptyicon);
-		labels.get(empty).setIcon(tempupicon);
+			// set icon
+			Image image = new ImageIcon(getClass().getResource("./assets/L" + picrandom[i] + ".jpg")).getImage();
+			ImageIcon icon = new ImageIcon(image.getScaledInstance(labels.get(i).getWidth() - 10,
+					labels.get(i).getHeight() - 10, Image.SCALE_FAST));
+			labels.get(i).setIcon(icon);
+			// set Text
+			labels.get(i).setText("" + (picrandom[i] - 1));
+			// System.out.println("Width: "+labels.get(i).getWidth()+" Height:
+			// "+labels.get(i).getHeight());
+		}
 	}
 
 	@Override
 
 	public void keyPressed(KeyEvent e) {
-		
+
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			stopcheating = true;
 			Generator();
@@ -168,8 +157,8 @@ public class Slithergame extends JFrame implements KeyListener {
 
 		}
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
-			if (stopcheating == true) {
-				if (winningcondition() == true) {
+			if (stopcheating) {
+				if (winningCondition()) {
 					winner();
 				} else {
 					try {
@@ -181,11 +170,11 @@ public class Slithergame extends JFrame implements KeyListener {
 			}
 		}
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			if (stopcheating == true) {
-				if (winningcondition() == true) {
+			if (stopcheating) {
+				if (winningCondition()) {
 					winner();
 				} else {
-					int empty = emptylabel();
+					int empty = emptyLabel();
 					if (empty != 4 && empty != 8 && empty != 12) {
 						try {
 							switchIcon(-1);
@@ -200,16 +189,14 @@ public class Slithergame extends JFrame implements KeyListener {
 			}
 		}
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			if (stopcheating == true) {
-				if (winningcondition() == true) {
+			if (stopcheating) {
+				if (winningCondition()) {
 					winner();
 				} else {
-					int empty = emptylabel();
+					int empty = emptyLabel();
 					if (empty != 3 && empty != 7 && empty != 11) {
 						try {
 							switchIcon(1);
-						} catch (ArrayIndexOutOfBoundsException i) {
-							error(1);
 						} catch (IndexOutOfBoundsException i) {
 							error(1);
 						}
@@ -220,15 +207,13 @@ public class Slithergame extends JFrame implements KeyListener {
 			}
 		}
 		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			if (stopcheating == true) {
-				if (winningcondition() == true) {
+			if (stopcheating) {
+				if (winningCondition()) {
 					winner();
 				} else {
 
 					try {
 						switchIcon(4);
-					} catch (ArrayIndexOutOfBoundsException i) {
-						error(1);
 					} catch (IndexOutOfBoundsException i) {
 						error(1);
 					}
